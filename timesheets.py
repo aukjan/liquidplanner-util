@@ -1,7 +1,6 @@
+__author__ = 'avbelkum'
 import datetime
 import getpass
-
-__author__ = 'avbelkum'
 import requests
 import json
 from dateutil.rrule import DAILY, rrule, MO, TU, WE, TH
