@@ -1,0 +1,4 @@
+__author__ = 'avbelkum'
+
+USER = 'email@domain.tld'
+PASS = 'password'

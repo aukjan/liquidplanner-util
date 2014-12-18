@@ -1,12 +1,9 @@
 __author__ = 'avbelkum'
-import datetime
-import getpass
-import requests
 import json
-from dateutil.rrule import DAILY, rrule, MO, TU, WE, TH
+import requests
 
 
-class LiquidPlanner():
+class liquidplanner():
     base_uri = 'https://app.liquidplanner.com/api'
     workspace_id = None
     email = None
@@ -77,6 +74,14 @@ class LiquidPlanner():
                                    '/timesheets?member_id=' + str(
             self.account_id)).content)
 
+    def timesheet(self, sheet_id):
+        return json.loads(self.get('/workspaces/' + str(self.workspace_id) +
+                                   '/timesheets/' + str(sheet_id)).content)
+
+    def project_timesheets(self, project_id):
+        return json.loads(self.get('/workspaces/' + str(self.workspace_id) +
+                                   '/timesheets?project_id=' + str(
+            project_id)).content)
 
     def track_time(self, task_id, act_id, day, hours):
         return json.loads(self.post('/workspaces/' + str(self.workspace_id) +
@@ -86,39 +91,6 @@ class LiquidPlanner():
                                                 'work_performed_on': day
                                     })).content)
 
-    @staticmethod
-    def timetracking():
-        email = raw_input(prompt="Email please: ")
-        password = getpass.getpass(prompt="Password: ")
-        LP = LiquidPlanner(email, password)
-        workspace = LP.workspaces()[0]
-        LP.set_workspace_id(workspace['id'])
-        account = LP.account()
-        LP.set_account_id(account['id'])
 
-        meeting_activity_id = 153964
-        development_activity_id = 153094
-        meeting_task_id = 14905876
-        cms_proj_org_id = 14973209
-
-        start=datetime.datetime(2014, 4, 11)
-        end=datetime.datetime(2014, 6, 1)
-        for timesheet in LP.timesheets():
-            print timesheet
-
-
-        for date in daterange(start,end):
-            assert isinstance(date, datetime.datetime)
-            print date.isoformat()
-            print LP.track_time(meeting_task_id,meeting_activity_id,date.isoformat(),3)
-            print LP.track_time(cms_proj_org_id,development_activity_id,date.isoformat(),6)
-
-
-def daterange(start, end):
-    return rrule(DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH))
-
-
-if __name__ == "__main__":
-    LiquidPlanner.timetracking()
 
 
